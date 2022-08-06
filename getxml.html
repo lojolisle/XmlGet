@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+</head> 
+<body>
+    <p>API get all data from database using XML</p>
+    <button type="button" id="myBtn" onclick="displayMessage()">Click Me</button>
+    
+    </p>
+    
+
+    <table id="userList" border="1">
+        <tr>
+            <th>UserId</th>
+            <th>UserName</th>
+            <th>PhoneNumber</th>
+            <th>City</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+            <td></td>
+            <td></td> 
+            <td> <button class="Edit">Edit</button> |  <button class="Delete">Delete</button></td>
+            
+        </tr>
+
+     
+    </table>
+    
+    
+
+    <script>
+        const getAllUsers = () => {
+            
+            var xhttp = new XMLHttpRequest();
+        
+             xhttp.onreadystatechange = function() {
+                 if (this.readyState == 4 && this.status == 200) {
+                     console.log("---",this.responseText)
+                    displayUsers(this);   
+                 }               
+             };
+
+             xhttp.open("GET", "http://localhost:5106/api/User/get.xml",true);
+             xhttp.send();
+         }
+
+         function displayUsers(xml) {
+            var allUserList, user, xmlDoc;
+            xmlDoc = xml.responseXML;
+            allUserList = xmlDoc.getElementsByTagName("tblUser");   
+
+            let tableList = document.getElementById('userList');
+                
+            for (user = 0; user < allUserList.length; user++) {
+                var new_row = tableList.rows[1].cloneNode(true);
+
+                new_row.cells[0].innerHTML = allUserList[user].childNodes[1].innerHTML;
+                new_row.cells[1].innerHTML = allUserList[user].childNodes[3].innerHTML;
+                new_row.cells[2].innerHTML = allUserList[user].childNodes[2].innerHTML;
+                new_row.cells[3].innerHTML = allUserList[user].childNodes[0].innerHTML;
+                tableList.appendChild( new_row );                 
+            }         
+        }   
+                    
+        function displayMessage() {
+            getAllUsers();
+        }
+
+    </script>
+
+</body>
+</html>
